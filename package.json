@@ -1,0 +1,14 @@
+{
+  "name": "electron_app",
+  "version": "1.0.0",
+  "description": "Getting started with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Andrew Ng",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^9.0.3"
+  }
+}

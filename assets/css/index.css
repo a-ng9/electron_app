@@ -1,0 +1,21 @@
+.button {
+    background-color: rgb(24, 53, 169);
+    border: none;
+    color: white;
+    padding: 5px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 200px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+body{
+    text-align: center;
+}
+
+#buttonNav{
+    text-align: center;
+}
