@@ -3,10 +3,12 @@ const {
     BrowserWindow,
     Menu,
     ipcMain,
+    globalShortcut
 } = require('electron')
 
 let mainWin;
 let addWin;
+var winTwo = true;
 
 //Main Window
 function createWindow() {
@@ -58,11 +60,13 @@ const mainMenuTemplate = [
     {
         label: 'File',
         submenu: [
-            isMac ? { role: 'close' } : { role: 'quit' },
-            { label: 'Clear Items' ,
-        click(){
-            mainWin.webContents.send('clearNotes')
-        }}
+            //isMac ? { label: 'Close', click() {addWin.close()} } : { label: 'Quit', click() {addWin.close(); } },
+            {
+                label: 'Clear Items',
+                click() {
+                    mainWin.webContents.send('clearNotes')
+                }
+            }
         ]
     },
     {
@@ -90,29 +94,71 @@ ipcMain.on('notifBadge', (event) => {
 ipcMain.on('rmvBadge', (event) => {
     event.returnValue = 'NO notification'
     app.dock.setBadge('');
-  })
+})
 
 //Add notes
 ipcMain.on('addNotes', function (e, item) {
-    // console.log(item);
     mainWin.webContents.send('addNotes', item);
-    // addWin.close();
+    console.log(winTwo);
+
+    if (winTwo == false) {
+        winTwo = true;
+        addWin.close();
+    }
 })
 
 //Secondary window (adds a window on top the main)
 function createAddWindow() {
     addWin = new BrowserWindow({
-        width: 300,
+        width: 250,
         height: 200,
-        title: 'Add shopping list item',
-        webPreferences: {
-            nodeIntegration: true
-        }
+        webPreferences: { nodeIntegration: true },
+        frame: false
     })
-    addWin.loadFile('src/new_win.html')
+    addWin.loadFile('src/notes_shortcut.html');
+
+    winTwo = false;
+
+    //Menu (Usually File, Edit etc...)
+    const mainMenu = Menu.buildFromTemplate(secondMainMenu)
+
+    //Initialising the mainMenu
+    Menu.setApplicationMenu(mainMenu);
 }
 
+//main menu for the shortcut screen
+const secondMainMenu = [
+    ...(isMac ? [{
+        label: app.name,
+        submenu: [
+            { role: 'about' },
+            { type: 'separator' },//
+            { role: 'services' },
+            { type: 'separator' },//
+            { role: 'hide' },
+            { role: 'hideothers' },
+            { role: 'unhide' },
+            { type: 'separator' },//
+            { role: 'quit' }
+        ]
+    }] : []),
+    {
+        label: 'File',
+        submenu: [
+            isMac ? {
+                label: 'Close',
+                accelerator: 'Cmd+W',
+                click() { addWin.close(); winTwo = true; }
+            } :
+                {
+                    label: 'Quit',
+                    accelerator: 'Ctrl+W',
+                    click() { addWin.close(); winTwo = true; }
+                },
+        ]
+    },
 
+];
 
 
 
@@ -120,8 +166,12 @@ function createAddWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow)
-
+app.whenReady().then(() => {
+    createWindow();
+    globalShortcut.register('CommandOrControl+N', () => {
+        createAddWindow();
+    })
+})
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar
