@@ -1,13 +1,8 @@
-
-//const electron = require('electron');
-//const { ipcRenderer } = electron;
-
-
 const { ipcRenderer,BrowserWindow } = require('electron')
 
 let myNotify;
 
-
+//Notification alert
 function notifyButton() {
     //characteristics of the notification pop up
     myNotify = new Notification('Message from Bob!', {
@@ -17,5 +12,12 @@ function notifyButton() {
 
     //signals the 'main.js' to add a notification badge
     console.log(ipcRenderer.sendSync('notifBadge'))
+}
+
+
+//Removes Notification badge
+function rmvButton() {
+    //signals the 'main.js' to remove notification badge
+    console.log(ipcRenderer.sendSync('rmvBadge'))
 }
 

@@ -8,6 +8,7 @@ const {
 let mainWin;
 let addWin;
 
+//Main Window
 function createWindow() {
     // Create the browser window.
     mainWin = new BrowserWindow({
@@ -27,7 +28,7 @@ function createWindow() {
     mainWin.loadFile('src/index.html')
 
     // Open the DevTools.
-    //mainWin.webContents.openDevTools()
+    mainWin.webContents.openDevTools()
 
     //Menu (Usually File, Edit etc...)
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
@@ -59,9 +60,9 @@ const mainMenuTemplate = [
             isMac ? { role: 'close' } : { role: 'quit' },
             {
                 label: 'Add Item',
-                click() { 
-                    createAddWindow(); 
-                    app.dock.setBadge('.'); 
+                click() {
+                    createAddWindow();
+                    app.dock.setBadge('.');
                 }
             },
             { label: 'Clear Items' }
@@ -82,11 +83,18 @@ const mainMenuTemplate = [
         ]
     },
 ];
+
 //Adding notification badge when notified in 'notes.js'
 ipcMain.on('notifBadge', (event) => {
     event.returnValue = 'Notification badge'
     app.dock.setBadge('.');
+})
+//Removing Notifcation badge with button press
+ipcMain.on('rmvBadge', (event) => {
+    event.returnValue = 'NO notification'
+    app.dock.setBadge('');
   })
+
 
 //Catch item:add from addIndex.html
 ipcMain.on('item:add', function (e, item) {
