@@ -13,9 +13,24 @@
 <body>
     <h1>Notes</h1>
 
+    <!-- This is where the notes will appear from the from -->
+    <div>
+        <ul class="ul"></ul>
+    </div>
+    <!-- A form that will populate notes above-->
+    <form class="form">
+        <div>
+            <label>Enter Note</label>
+            <input type="Text" id="note" autofocus>
+        </div>
+        <button type="submit">Add Note</button>
+    </form>
+
+    <!--Button tags for notification purposes -->
     <button class="button" id="notif" onclick="notifyButton()">Receive Notifications</button>
     <button id="rNotif" onclick="rmvButton()">Remove Notifications</button>
-    
+
+    <!--Link to go back to main window -->
     <div>
         <a href="../src/index.html">Go back to Main Menu</a>
     </div>

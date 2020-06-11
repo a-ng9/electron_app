@@ -38,6 +38,7 @@ function createWindow() {
 
 //checks for MacOS
 const isMac = process.platform === 'darwin';
+
 //create menu template
 const mainMenuTemplate = [
     ...(isMac ? [{
@@ -58,14 +59,10 @@ const mainMenuTemplate = [
         label: 'File',
         submenu: [
             isMac ? { role: 'close' } : { role: 'quit' },
-            {
-                label: 'Add Item',
-                click() {
-                    createAddWindow();
-                    app.dock.setBadge('.');
-                }
-            },
-            { label: 'Clear Items' }
+            { label: 'Clear Items' ,
+        click(){
+            mainWin.webContents.send('clearNotes')
+        }}
         ]
     },
     {
@@ -95,16 +92,22 @@ ipcMain.on('rmvBadge', (event) => {
     app.dock.setBadge('');
   })
 
+//Add notes
+ipcMain.on('addNotes', function (e, item) {
+    // console.log(item);
+    mainWin.webContents.send('addNotes', item);
+    // addWin.close();
+})
 
 //Catch item:add from addIndex.html
-ipcMain.on('item:add', function (e, item) {
+ipcMain.on('addNotes', function (e, item) {
     // console.log(item);
-    mainWin.webContents.send('item:add', item);
-    addWin.close();
+    mainWin.webContents.send('addNotes', item);
+    // addWin.close();
 })
 
 
-//Handles create add window
+//Secondary window (adds a window on top the main)
 function createAddWindow() {
     addWin = new BrowserWindow({
         width: 300,
@@ -114,7 +117,7 @@ function createAddWindow() {
             nodeIntegration: true
         }
     })
-    addWin.loadFile('src/addIndex.html')
+    addWin.loadFile('src/new_win.html')
 }
 
 
