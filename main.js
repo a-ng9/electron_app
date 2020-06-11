@@ -30,7 +30,7 @@ function createWindow() {
     mainWin.loadFile('src/index.html')
 
     // Open the DevTools.
-    mainWin.webContents.openDevTools()
+    //mainWin.webContents.openDevTools()
 
     //Menu (Usually File, Edit etc...)
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
