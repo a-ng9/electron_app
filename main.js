@@ -1,5 +1,3 @@
-//const electron = require('electron')
-
 const {
     app,
     BrowserWindow,
@@ -61,7 +59,10 @@ const mainMenuTemplate = [
             isMac ? { role: 'close' } : { role: 'quit' },
             {
                 label: 'Add Item',
-                click() { createAddWindow() }
+                click() { 
+                    createAddWindow(); 
+                    app.dock.setBadge('.'); 
+                }
             },
             { label: 'Clear Items' }
         ]
@@ -81,7 +82,11 @@ const mainMenuTemplate = [
         ]
     },
 ];
-
+//Adding notification badge when notified in 'notes.js'
+ipcMain.on('notifBadge', (event) => {
+    event.returnValue = 'Notification badge'
+    app.dock.setBadge('.');
+  })
 
 //Catch item:add from addIndex.html
 ipcMain.on('item:add', function (e, item) {
@@ -91,7 +96,7 @@ ipcMain.on('item:add', function (e, item) {
 })
 
 
-//Handle create add window
+//Handles create add window
 function createAddWindow() {
     addWin = new BrowserWindow({
         width: 300,

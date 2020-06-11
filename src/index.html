@@ -11,36 +11,23 @@
     <h1>Main Menu</h1>
     <div id="buttonNav">
         <a href="../src/gallery.html" class="button">
-            <div>
-                <h2>Gallery</h2>
-            </div>
+            <h2>Gallery</h2>
         </a>
         <a href="../src/notes.html" class="button">
-            <div>
-                <h2>Notes</h2>
-            </div>
+            <h2>Notes</h2>
         </a>
         <a href="../src/about.html" class="button">
-            <div>
-                <h2>About</h2>
-            </div>
+            <h2>About</h2>
         </a>
     </div>
+
     <div>
+
         <ul></ul>
     </div>
-    <script>
-        const electron = require('electron');
-        const { ipcRenderer } = electron;
-        const ul = document.querySelector('ul');
+    <script src="index.js"></script>
 
-        ipcRenderer.on('item:add', function (e, item) {
-            const li = document.createElement('li');
-            const itemText = document.createTextNode(item);
-            li.appendChild(itemText);
-            ul.appendChild(li);
-        });
-    </script>
+    
 </body>
 
 </html>
