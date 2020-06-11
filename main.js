@@ -99,14 +99,6 @@ ipcMain.on('addNotes', function (e, item) {
     // addWin.close();
 })
 
-//Catch item:add from addIndex.html
-ipcMain.on('addNotes', function (e, item) {
-    // console.log(item);
-    mainWin.webContents.send('addNotes', item);
-    // addWin.close();
-})
-
-
 //Secondary window (adds a window on top the main)
 function createAddWindow() {
     addWin = new BrowserWindow({
