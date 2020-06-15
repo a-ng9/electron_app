@@ -5,6 +5,8 @@ const {
     ipcMain,
     globalShortcut
 } = require('electron')
+const url=require('url')
+const path=require('path')
 
 let mainWin;
 let addWin;
@@ -14,23 +16,23 @@ var winTwo = true;
 function createWindow() {
     // Create the browser window.
     mainWin = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1000,
+        height: 800,
         webPreferences: {
             nodeIntegration: true
         }
     })
+
     //Quit all windows when closed
     mainWin.on('closed', function () {
         app.quit();
     })
 
-
     // and load the index.html of the app.
     mainWin.loadFile('src/index.html')
 
     // Open the DevTools.
-    //mainWin.webContents.openDevTools()
+    mainWin.webContents.openDevTools()
 
     //Menu (Usually File, Edit etc...)
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
@@ -160,7 +162,13 @@ const secondMainMenu = [
 
 ];
 
-
+//File Drag and Drop
+ipcMain.on('ondragstart', (event, path) => {
+    event.sender.startDrag({
+      file: path,
+      icon: 'folder.png'
+    })
+  })
 
 
 // This method will be called when Electron has finished
