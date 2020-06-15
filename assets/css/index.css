@@ -27,3 +27,9 @@ body{
     text-align: center;
     list-style-position: inside;
 }
+
+#webView{
+    margin: auto;
+    border: 3px solid;
+
+}

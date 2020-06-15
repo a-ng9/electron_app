@@ -3,7 +3,8 @@ const {
     BrowserWindow,
     Menu,
     ipcMain,
-    globalShortcut
+    globalShortcut,
+    BrowserView,
 } = require('electron')
 const url=require('url')
 const path=require('path')
@@ -19,7 +20,9 @@ function createWindow() {
         width: 1000,
         height: 800,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            //Enabling webViews
+            webviewTag: true
         }
     })
 
@@ -169,6 +172,7 @@ ipcMain.on('ondragstart', (event, path) => {
       icon: 'folder.png'
     })
   })
+
 
 
 // This method will be called when Electron has finished
