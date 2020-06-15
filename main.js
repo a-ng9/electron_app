@@ -6,14 +6,15 @@ const {
     globalShortcut,
     BrowserView,
 } = require('electron')
-const url=require('url')
-const path=require('path')
 
 let mainWin;
+
 let addWin;
 var winTwo = true;
 
-//Main Window
+let BsWin, BsView;
+
+//Main window
 function createWindow() {
     // Create the browser window.
     mainWin = new BrowserWindow({
@@ -43,9 +44,47 @@ function createWindow() {
     Menu.setApplicationMenu(mainMenu);
 }
 
+//Secondary window (adds a window on top the main)
+function createAddWindow() {
+    addWin = new BrowserWindow({
+        width: 250,
+        height: 200,
+        webPreferences: { nodeIntegration: true },
+        frame: false
+    })
+    addWin.loadFile('src/notes_shortcut.html');
+
+    winTwo = false;
+
+    //Menu (Usually File, Edit etc...)
+    const mainMenu = Menu.buildFromTemplate(secondMainMenu)
+
+    //Initialising the mainMenu
+    Menu.setApplicationMenu(mainMenu);
+}
+
+//Browser View window
+function BsrWindow() {
+    BsView = new BrowserView()
+    BsWin = new BrowserWindow({
+        width: 800,
+        height: 600,
+    });
+
+    BsWin.setBrowserView(BsView);
+
+    BsView.setBounds({ x: 0, y: 0, width: 800, height: 600 })
+    BsView.webContents.loadURL('https://www.minicompany.io/home')
+
+}
+//Calling Browser Window when button pressed
+ipcMain.on('invokeAction', function (event, data) {
+    BsrWindow(event);
+    console.log(data)
+})
+
 //checks for MacOS
 const isMac = process.platform === 'darwin';
-
 //create menu template
 const mainMenuTemplate = [
     ...(isMac ? [{
@@ -112,25 +151,6 @@ ipcMain.on('addNotes', function (e, item) {
     }
 })
 
-//Secondary window (adds a window on top the main)
-function createAddWindow() {
-    addWin = new BrowserWindow({
-        width: 250,
-        height: 200,
-        webPreferences: { nodeIntegration: true },
-        frame: false
-    })
-    addWin.loadFile('src/notes_shortcut.html');
-
-    winTwo = false;
-
-    //Menu (Usually File, Edit etc...)
-    const mainMenu = Menu.buildFromTemplate(secondMainMenu)
-
-    //Initialising the mainMenu
-    Menu.setApplicationMenu(mainMenu);
-}
-
 //main menu for the shortcut screen
 const secondMainMenu = [
     ...(isMac ? [{
@@ -168,10 +188,12 @@ const secondMainMenu = [
 //File Drag and Drop
 ipcMain.on('ondragstart', (event, path) => {
     event.sender.startDrag({
-      file: path,
-      icon: 'folder.png'
+        file: path,
+        icon: 'folder.png'
     })
-  })
+})
+
+
 
 
 
@@ -180,6 +202,8 @@ ipcMain.on('ondragstart', (event, path) => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
     createWindow();
+    //uncomment the below code to make the browser window show upon launch of the app
+    // BsrWindow();
     globalShortcut.register('CommandOrControl+N', () => {
         createAddWindow();
     })
