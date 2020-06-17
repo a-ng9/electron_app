@@ -5,6 +5,7 @@ const {
     ipcMain,
     globalShortcut,
     BrowserView,
+    ipcRenderer,
 } = require('electron')
 
 let mainWin;
@@ -13,6 +14,8 @@ let addWin;
 var winTwo = true;
 
 let BsWin, BsView;
+
+let onlineStatusWindow
 
 //Main window
 function createWindow() {
@@ -44,12 +47,14 @@ function createWindow() {
     Menu.setApplicationMenu(mainMenu);
 }
 
+//frameless
 //Secondary window (adds a window on top the main)
 function createAddWindow() {
     addWin = new BrowserWindow({
         width: 250,
         height: 200,
         webPreferences: { nodeIntegration: true },
+        
         frame: false
     })
     addWin.loadFile('src/notes_shortcut.html');
@@ -193,9 +198,11 @@ ipcMain.on('ondragstart', (event, path) => {
     })
 })
 
-
-
-
+//Wifi status
+ipcMain.on('wifi-status-message', (event, status) => {
+    //console.log(status) 
+    event.reply('asynchronous-reply', status)
+  })
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -204,6 +211,7 @@ app.whenReady().then(() => {
     createWindow();
     //uncomment the below code to make the browser window show upon launch of the app
     // BsrWindow();
+    //onlineStatusWindow.loadURL(`../src/index.html`)
     globalShortcut.register('CommandOrControl+N', () => {
         createAddWindow();
     })
@@ -224,3 +232,4 @@ app.on('activate', () => {
         createWindow()
     }
 })
+
