@@ -26,7 +26,9 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             //Enabling webViews
-            webviewTag: true
+            webviewTag: true,
+            //Enabling remote module for reading file
+            enableRemoteModule: true
         }
     })
 
@@ -54,7 +56,7 @@ function createAddWindow() {
         width: 250,
         height: 200,
         webPreferences: { nodeIntegration: true },
-        
+
         frame: false
     })
     addWin.loadFile('src/notes_shortcut.html');
@@ -202,7 +204,7 @@ ipcMain.on('ondragstart', (event, path) => {
 ipcMain.on('wifi-status-message', (event, status) => {
     //console.log(status) 
     event.reply('asynchronous-reply', status)
-  })
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
